@@ -272,9 +272,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let brainSizeStr = api.brainSize()
         let cacheSizeStr = api.cacheSize().formatted
 
-        let cacheItem = NSMenuItem(title: "💾 Cache: \(cacheSizeStr)", action: nil, keyEquivalent: "")
-        cacheItem.isEnabled = false
-        menu.addItem(cacheItem)
+        menu.addItem(makeItem("💾 Clear Cache (\(cacheSizeStr))", action: #selector(clearCache)))
 
         menu.addItem(makeItem("🧹 Clear Brain (\(brainSizeStr))", action: #selector(clearBrain)))
         menu.addItem(makeItem("🗑️ Clear Code Tracker", action: #selector(clearCodeTracker)))
@@ -367,6 +365,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         alert.addButton(withTitle: "Cancel")
         if alert.runModal() == .alertFirstButtonReturn {
             api.clearBrain()
+            fetchAndUpdate()
+        }
+    }
+
+    @objc private func clearCache() {
+        let alert = NSAlert()
+        alert.messageText = "Clear Cache?"
+        alert.informativeText = "All cached conversations and artifacts will be deleted. This is irreversible."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Clear")
+        alert.addButton(withTitle: "Cancel")
+        if alert.runModal() == .alertFirstButtonReturn {
+            api.clearCache()
             fetchAndUpdate()
         }
     }

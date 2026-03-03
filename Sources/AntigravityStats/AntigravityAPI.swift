@@ -268,6 +268,19 @@ class AntigravityAPI: @unchecked Sendable {
 
     // MARK: - Actions
 
+    func clearCache() {
+        let fm = FileManager.default
+        let dirsToClear = [brainDir, conversationsDir]
+        for dir in dirsToClear {
+            guard let contents = try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) else { continue }
+            for item in contents {
+                let name = item.lastPathComponent
+                if name == ".DS_Store" { continue }
+                try? fm.removeItem(at: item)
+            }
+        }
+    }
+
     func clearBrain() {
         let fm = FileManager.default
         guard let contents = try? fm.contentsOfDirectory(at: brainDir, includingPropertiesForKeys: nil) else { return }
